@@ -8,10 +8,10 @@ if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['REMOTE_ADDR'] == '127.0.0.
     $password = ''; 
 } else {
     // ONLINE SETTINGS (InfinityFree - Update these from your Account Dashboard!)
-    $host = 'sqlXXX.infinityfree.com'; // <--- Change to your MySQL Host
-    $dbname = 'if0_XXXXXX_db';         // <--- Change to your DB Name
-    $username = 'if0_XXXXXX';           // <--- Change to your DB Username
-    $password = 'Your_FTP_Password';    // <--- Change to your Account Password
+    $host = 'sql303.infinityfree.com'; // <--- Change to your MySQL Host
+    $dbname = 'if0_41447548_barangay_db';         // <--- Change to your DB Name
+    $username = 'if0_41447548';           // <--- Change to your DB Username
+    $password = 'Wasd1187';    // <--- Change to your Account Password
 }
 
 try {
