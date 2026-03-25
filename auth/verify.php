@@ -14,14 +14,26 @@ if (isset($_GET['email']) && isset($_GET['token'])) {
         $stmt->execute([$email, $token]);
         $user = $stmt->fetch();
 
-        if ($user) {
-            // 2. Update user to 'active' and clear the token so it can't be used again
-            // NOTE: If you want them to go to 'pending' for Admin approval, change 'active' to 'pending'
-            $update = $pdo->prepare("UPDATE users SET status = 'active', verification_token = NULL WHERE user_id = ?");
+        // Check if they are already pending or active
+            $checkStatus = $pdo->prepare("SELECT status FROM users WHERE email = ?");
+            $checkStatus->execute([$email]);
+            $statusCheck = $checkStatus->fetch();
+
+            if ($statusCheck && ($statusCheck['status'] === 'pending' || $statusCheck['status'] === 'active')) {
+                echo "<script>
+                        alert('This account is already verified and is either pending or active.');
+                        window.location.href = 'login.php';
+                      </script>";
+            }
+
+if ($user) {
+            // 2. Update user to 'pending' instead of 'active'
+            // This forces the 'Pending Approval' alert in your process_login.php
+            $update = $pdo->prepare("UPDATE users SET status = 'pending', verification_token = NULL WHERE user_id = ?");
             $update->execute([$user['user_id']]);
 
             echo "<script>
-                    alert('Email verified successfully! Hello " . htmlspecialchars($user['username']) . ", you can now log in.');
+                    alert('Email verified! Your account is now PENDING. Please wait for the Secretary or Captain to approve your registration.');
                     window.location.href = 'login.php';
                   </script>";
             exit();

@@ -41,7 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->beginTransaction();
 
         // 2. Insert User (Status: unverified)
-        $sql1 = "INSERT INTO users (username, password, email, role, status, verification_token) VALUES (?, ?, ?, 'user', 'unverified', ?)";
+       // Inside process_register.php
+$sql1 = "INSERT INTO users (username, password, email, role, status, verification_token) 
+         VALUES (?, ?, ?, 'user', 'unverified', ?)";
         $stmt1 = $pdo->prepare($sql1);
         $stmt1->execute([$username, $hashed_password, $email, $verification_token]);
         

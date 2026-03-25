@@ -31,7 +31,9 @@ $pendingUsers = $stmt->fetchAll();
             <td><?php echo $user['full_address']; ?></td>
             <td>
                 <a href="update_status.php?id=<?php echo $user['user_id']; ?>&status=active" style="color: green;">Approve</a> | 
-                <a href="update_status.php?id=<?php echo $user['user_id']; ?>&status=inactive" style="color: red;">Reject</a>
+ <a href="update_status.php?id=<?php echo $user['user_id']; ?>&status=inactive" 
+   style="color: red;" 
+   onclick="return confirm('Are you sure you want to REJECT this resident?')">Reject</a>
             </td>
         </tr>
         <?php endforeach; ?>
