@@ -1,5 +1,8 @@
 <?php
 // 1. Load PHPMailer classes
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -54,16 +57,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail = new PHPMailer(true);
 
         // Server settings
-        $mail->isSMTP();
+$mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'joevanfontanilla@gmail.com'; // CHANGE THIS
-        $mail->Password   = 'imvw ghie ugui plpm';    // CHANGE THIS
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->Username   = 'joevanfontanilla@gmail.com';
+        $mail->Password   = 'imvw ghie ugui plpm'; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // Change this
+        $mail->Port       = 465;                         // Change this
 
         // Recipients
-        $mail->setFrom('YOUR_GMAIL@gmail.com', 'Barangay Connect');
+        $mail->setFrom('joevanfontanilla@gmail.com', 'Barangay Connect');
         $mail->addAddress($email, "$first_name $last_name");
 
         // CLEANED LINK: Points directly to your auth folder
