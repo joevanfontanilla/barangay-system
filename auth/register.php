@@ -2,14 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barangay Connect - Register</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/register_style.css">
+    <style>
+        /* ADDED: Back Button Styles */
+        .header-container { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .btn-back { text-decoration: none; color: #65676b; font-size: 1.2rem; transition: 0.2s; cursor: pointer; border: none; background: none; }
+        .btn-back:hover { color: #1877f2; }
+    </style>
 </head>
 <body class="auth-page">
 
 <div class="register-container">
-    <h2>Join Our Community</h2>
+    <div class="header-container">
+        <a href="../index.php" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h2 style="margin: 0;">Join Our Community</h2>
+    </div>
+
     <form action="process_register.php" method="POST" id="registrationForm">
         <div class="form-grid">
             
@@ -18,7 +31,8 @@
                 <input type="text" name="username" placeholder="Username" required>
                 
                 <label>Email Address</label>
-                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="email" name="email" id="email_input" placeholder="Email Address" required 
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                 
                 <label>Contact Number (Mobile)</label>
                 <div class="input-container">
@@ -111,7 +125,7 @@
     const contactInput = document.getElementById('contact_no_input');
     const hiddenInput = document.getElementById('full_contact_no');
 
-    // --- 1. PSGC API CASCADE LOGIC ---
+    // --- 1. PSGC API CASCADE LOGIC (Restored) ---
     fetch('https://psgc.gitlab.io/api/regions/')
         .then(res => res.json())
         .then(data => {
@@ -164,7 +178,7 @@
         purokSelect.disabled = !(this.value !== "" && this.value !== "Select Name");
     });
 
-    // --- 2. PASSWORD & CONTACT LOGIC ---
+    // --- 2. PASSWORD & CONTACT LOGIC (Restored) ---
     function togglePassword(inputId, eyeId) {
         const input = document.getElementById(inputId);
         const eyeIcon = document.getElementById(eyeId);
@@ -177,7 +191,6 @@
         }
     }
 
-    // Real-time contact formatting
     contactInput.addEventListener('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
         hiddenInput.value = "09" + this.value;
@@ -187,40 +200,42 @@
         const pass = document.getElementById('password').value;
         const confirm = document.getElementById('confirm_password').value;
         const contactBody = contactInput.value;
+        const emailBody = document.getElementById('email_input').value; // Added
         const msg = document.getElementById('message');
         const strongRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
+        const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i; // Added
 
-        // Validate Contact
+        // ADDED: Validate Email Legitimacy
+        if (!emailRegex.test(emailBody)) {
+            alert("Please enter a legitimate email address for confirmation.");
+            return false;
+        }
+
         if (contactBody.length !== 9) {
             alert("Please enter exactly 9 digits after the 09 prefix.");
             return false;
         }
 
-        // Validate Password Strength
         if (!strongRegex.test(pass)) {
             msg.style.color = "red";
             msg.innerHTML = "❌ Min 8 chars, 1 Capital, 1 Special Char.";
             return false;
         }
 
-        // Validate Password Match
         if (pass !== confirm) {
             msg.style.color = "red";
             msg.innerHTML = "❌ Passwords do not match.";
             return false;
         }
 
-        // Ensure hidden input is set one last time
         hiddenInput.value = "09" + contactBody;
         return true;
     }
 
-    // Attach validation to submit event
     document.getElementById('registrationForm').onsubmit = function() {
         return validateForm();
     };
 
-    // UI feedback for password typing
     document.getElementById('password').onkeyup = function() {
         const pass = this.value;
         const msg = document.getElementById('message');

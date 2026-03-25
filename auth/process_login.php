@@ -18,9 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (password_verify($password, $user['password'])) {
                 
                 $actual_role = $user['role'];
-                $current_status = $user['status']; // Get the status (pending, active, inactive)
+                $current_status = $user['status']; // Get the status (pending, active, inactive, unverified)
 
-                // --- 2. THE STATUS GATE (CRITICAL FIX) ---
+                // --- 2. THE STATUS GATE (UPDATED WITH UNVERIFIED) ---
+                
+                // ADDED: Check for email verification first
+                if ($current_status === 'unverified') {
+                    echo "<script>alert('Your email is not yet verified. Please check your inbox and click the verification link.'); window.history.back();</script>";
+                    exit();
+                }
+
                 if ($current_status === 'pending') {
                     echo "<script>alert('Your account is still PENDING. Please wait for the Secretary or Super Admin to approve your registration.'); window.history.back();</script>";
                     exit();
